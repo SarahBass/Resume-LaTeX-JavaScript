@@ -1,0 +1,348 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 79, 144} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage[
+    pdftitle={Sarah Bass},
+    pdfauthor={Sarah Bass},
+    pdfcreator={LaTeX Javascript},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    % \usepackage[T1]{fontenc} % this breaks sb2nov
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+
+
+% Some settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
+\pagestyle{empty} % no header or footer
+\setcounter{secnumdepth}{0} % no section numbering
+\setlength{\parindent}{0pt} % no indentation
+\setlength{\topskip}{0pt} % no top skip
+\setlength{\columnsep}{0cm} % set column seperation
+\makeatletter
+\let\ps@customFooterStyle\ps@plain % Copy the plain style to customFooterStyle
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small John Doe - Page \thepage{} of \pageref*{LastPage}}
+}{}{} % replace number by desired string
+\makeatother
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{\needspace{4\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule]
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.3 cm
+}{
+    % bottom space:
+    0.2 cm
+} % section title spacing
+
+\renewcommand\labelitemi{$\circ$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0.2 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{Designed in \LaTeX\ and \textsc{JavaScrip} }\hspace{\widthof{Last updated in December 2024}}
+    }}}%
+  }%
+}%
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+
+% new command for external links:
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \placelastupdatedtext
+    \begin{header}
+        \textbf{\fontsize{24 pt}{24 pt}\selectfont Sarah Bass}
+
+        \vspace{0.3 cm}
+
+        \normalsize
+        \mbox{{\color{black}\footnotesize\faMapMarker*}\hspace*{0.13cm}ADDRESS HIDDEN}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{mailto:SarahReneBass@gmail.com}{\color{black}{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}SarahReneBass@gmail.com}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{tel:+90-541-999-99-9}{\color{black}{\footnotesize\faPhone*}\hspace*{0.13cm}PHONE NUMBER HIDDEN}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://SarahBass.github.io/}{\color{black}{\footnotesize\faLink}\hspace*{0.13cm}https://sarahbass.github.io/}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://www.linkedin.com/in/sarah-bass-a22465268}{\color{black}{\footnotesize\faLinkedinIn}\hspace*{0.13cm}SarahBass}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://github.com/SarahBass}{\color{black}{\footnotesize\faGithub}\hspace*{0.13cm}SarahBass}}%
+    \end{header}
+
+    \vspace{0.3 cm - 0.3 cm}
+
+
+    \section{Profile}
+
+
+
+        
+        \begin{onecolentry}
+Innovative Software Engineer with a passion for creating unique, user-focused solutions. Experienced in developing wearable tech applications using languages like C, Monkey C, Java, Kotlin, JavaScript, and Python. Known for pushing hardware boundaries to deliver engaging designs that inspire user engagement and innovation within the developer community.
+
+        \end{onecolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{onecolentry}
+            \href{https://apps.garmin.com/en-US/developer/f94e72b2-1bb1-4ad4-80ef-a1d38cd49c2c/apps}{Garmin}.       \href{https://gallery.fitbit.com/developer/850971bc-7265-471f-81f9-608d179f4ddd}{Fitbit}. 
+            \href{https://gallery.fitbit.com/developer/850971bc-7265-471f-81f9-608d179f4ddd}{Google Play}. 
+            \href{https://gallery.fitbit.com/developer/850971bc-7265-471f-81f9-608d179f4ddd}{Apple Store}. 
+            \href{https://gallery.fitbit.com/developer/850971bc-7265-471f-81f9-608d179f4ddd}{Unity}. 
+            \href{https://gallery.fitbit.com/developer/850971bc-7265-471f-81f9-608d179f4ddd}{Godot}. 
+            \href{https://gallery.fitbit.com/developer/850971bc-7265-471f-81f9-608d179f4ddd}{UnrealEngine}.        
+            \href{https://arcade.thumby.us/}{Thumby}. 
+        \end{onecolentry}
+
+    \section{Projects}        
+        \begin{twocolentry}{
+            \textit{\href{https://github.com/sinaatalay/rendercv}{github.com/name/repo}}}
+            \textbf{Multi-User Drawing Tool}
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Developed an electronic classroom where multiple users can simultaneously view and draw on a "chalkboard" with each person's edits synchronized
+                \item Tools Used: C++, MFC
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            
+            
+        \textit{\href{https://github.com/sinaatalay/rendercv}{github.com/name/repo}}}
+            \textbf{Synchronized Desktop Calendar}
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Developed a desktop calendar with globally shared and synchronized calendars, allowing users to schedule meetings with other users
+                \item Tools Used: C\#, .NET, SQL, XML
+            \end{highlights}
+        \end{onecolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            
+            
+        \textit{2002}}
+            \textbf{Custom Operating System}
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Built a UNIX-style OS with a scheduler, file system, text editor, and calculator
+                \item Tools Used: C
+            \end{highlights}
+        \end{onecolentry}
+
+
+
+    
+    \section{Technologies}
+
+
+
+        
+        \begin{onecolentry}
+            \textbf{Languages:} C++, C, Java, Objective-C, C\#, SQL, JavaScript
+        \end{onecolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{onecolentry}
+            \textbf{Technologies:} .NET, Microsoft SQL Server, XCode, Interface Builder
+        \end{onecolentry}
+
+
+    
+
+
+
+    \section{Education}
+
+
+
+        
+        \begin{twocolentry}{
+            
+            
+        \textit{Sept 2000 – May 2005}}
+            \textbf{University of Pennsylvania}
+
+            \textit{BS in Computer Science}
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item GPA: 3.9/4.0 (\href{https://example.com}{a link to somewhere})
+                \item \textbf{Coursework:} Computer Architecture, Comparison of Learning Algorithms, Computational Theory
+            \end{highlights}
+        \end{onecolentry}
+
+
+
+    
+    \section{Previous Career: Teaching 2009-2020} 
+      \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+         
+         \textit{Saddleback Unified School District}   
+        \textit{June 2016 – Aug 2020}}
+            \textbf{Special Academic Instructional Advisor}
+        \textit{June 2015 – Aug 2016}}
+            \textbf{Special Education Student Teacher}
+               \textit{June 2013 – Aug 2015}}
+                \textit{Palm Springs Unified School District}
+            \textbf{General Education Teacher}
+                    \textit{June 2012 – Aug 2013}}
+                \textit{Santa Ana Unified School District}
+            \textbf{Student Teacher}
+             \textit{June 2010 – Aug 2012}}
+                \textit{Capistrano Unified School District}
+            \textbf{Intructional Aide}
+              \textit{June 2009 – Aug 2010}}
+                \textit{Saint Andrew's Church}
+            \textbf{Preschool Instructor}
+   
+            
+        \end{onecolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item \textbf{Led Diverse Teams} meeting with parents, support staff, psychologists, administrators, district employees, and specialists (e.g. occupational therapists, speech pathologists, and behavioral analysts) to design and implement Individualized Education Plans (IEPs).
+                \item \textbf{Program Management and Coordination} by utilizing testing and legal documentation to qualify students for IEPs, securing funding for essential services including instructional aides, transportation, therapy, social services, extracurricular support, and food programs.
+                \item \textbf{Cultivated Strong Communication} through STEM education initiatives, leading Science Fairs and competitions, and attending STEM seminars and training alongside team members. Engaged in school-wide efforts through Union meetings, social committees, and PRIDE initiatives, continuously fostering collaboration and contributing to a positive, inclusive work culture.
+            \end{highlights}
+        \end{onecolentry}
+            
+       
+\end{document}
+
+    
+   
